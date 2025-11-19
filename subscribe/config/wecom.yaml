@@ -1,0 +1,19 @@
+# WeCom (WeChat Work) Notification Configuration
+# Settings for sending notifications to WeCom (企业微信)
+
+enabled: false
+
+# Environment variable name that contains the webhook URL
+webhook_url_env: "WECOM_WEBHOOK_URL"
+
+# Number of retry attempts for failed sends
+retry_times: 3
+
+# Delay between retries in seconds
+retry_delay: 5
+
+# Send notification on errors
+send_on_error: true
+
+# Send notification on successful completion
+send_on_success: false

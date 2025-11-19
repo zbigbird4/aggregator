@@ -1,0 +1,21 @@
+# Latency Test Configuration
+# Settings for proxy connectivity and speed testing
+
+enabled: true
+
+# Connection timeout in milliseconds
+timeout: 5000
+
+# Number of concurrent tests
+concurrent: 10
+
+# Number of retries on failure
+retries: 2
+
+# Patterns to exclude from latency testing
+exclude_patterns:
+  - "^test-.*"
+  - ".*-(expired|disabled)$"
+
+# Patterns to include in latency testing (if empty, all are tested)
+include_patterns: []
