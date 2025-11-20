@@ -1,0 +1,73 @@
+
+================================================================================
+FUNCTIONAL TEST REPORT - AGGREGATOR PROJECT
+================================================================================
+Execution Date: 2025-11-20 01:07:25
+Total Execution Time: 0.01s
+
+STAGE TIMING BREAKDOWN
+--------------------------------------------------------------------------------
+LATENCY_TEST             0.00s (  0.7%)
+OUTPUT                   0.01s ( 71.1%)
+RANKING                  0.00s (  0.2%)
+VERIFY                   0.00s (  0.2%)
+
+DATA FLOW ANALYSIS
+--------------------------------------------------------------------------------
+Total Loaded:           100
+Verified:                86 ( 86.0%)
+Passed Latency Test:     71 ( 82.6% of verified)
+Final Selected:          56 ( 78.9% of tested)
+Overall Pass Rate:       56 ( 56.0% of total)
+
+QUALITY METRICS
+--------------------------------------------------------------------------------
+Input Quality Distribution:
+  Good        50 ( 50.0%)
+  Medium      35 ( 35.0%)
+  Poor        15 ( 15.0%)
+
+Input Latency Statistics:
+  Min:        37.6ms
+  Max:       984.1ms
+  Average:   191.0ms
+
+Output Proxy Statistics:
+  Total Proxies: 56
+  Score Min:        87.8
+  Score Max:        98.3
+  Score Average:    92.4
+  Latency Min:        37.6ms
+  Latency Max:       279.5ms
+  Latency Average:   122.0ms
+  Residential:    30 ( 53.6%)
+
+GEOGRAPHIC DISTRIBUTION
+--------------------------------------------------------------------------------
+  AU      5
+  BR      1
+  CA      5
+  CN      2
+  DE      5
+  FR      5
+  GB      5
+  IN      5
+  JP      8
+  KR      5
+  SG      1
+  US      9
+
+PERFORMANCE ANALYSIS
+--------------------------------------------------------------------------------
+Average time per proxy (total):  0.13ms
+Average time per proxy (verify): 0.00ms
+Average time per proxy (test):   0.00ms
+Throughput:                      7648.3 proxies/sec
+
+STATUS & RECOMMENDATIONS
+--------------------------------------------------------------------------------
+✓ Execution time within acceptable range
+✓ Final output rate is healthy
+✓ Latency test success rate is good
+
+================================================================================

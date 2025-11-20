@@ -1,0 +1,29 @@
+# Test Configuration for Latency Tester - Scenario 1: Fast Testing
+# For functional testing with 100 proxies
+
+enabled: true
+
+# Connection timeout in milliseconds - reduced for testing
+timeout: 3000
+
+# Number of concurrent tests - high concurrency for faster testing
+concurrent: 20
+
+# Number of retries on failure
+retries: 1
+
+# Patterns to exclude from latency testing
+exclude_patterns:
+  - "^test-down.*"
+  - ".*-(expired|disabled)$"
+  - ".*-poor-.*"
+
+# Patterns to include in latency testing (if empty, all are tested)
+include_patterns: []
+
+# Additional test parameters
+test_count: 2
+max_latency: 5000
+ping_timeout: 3
+http_timeout: 5
+http_connect_timeout: 3

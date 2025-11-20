@@ -1,0 +1,373 @@
+# Generated Clash Configuration
+# Generated: 2025-11-20T01:07:25.115196
+# Proxies: 56
+
+proxies:
+  - name: VMESS-JP-Tokyo-23
+    type: vmess
+    server: 185.162.172.166
+    port: 80
+
+  - name: SS-US-New York-12
+    type: ss
+    server: 104.248.207.79
+    port: 3128
+    cipher: aes-256-gcm
+    password: pass12
+
+  - name: SSR-US-New York-43
+    type: ssr
+    server: 147.135.232.198
+    port: 1080
+    password: pass43
+
+  - name: VLESS-KR-Seoul-29
+    type: vless
+    server: 188.166.192.40
+    port: 8443
+
+  - name: SS-DE-Berlin-47
+    type: ss
+    server: 188.166.14.244
+    port: 3128
+    cipher: aes-256-gcm
+    password: pass47
+
+  - name: SS-JP-Osaka-33
+    type: ss
+    server: 147.135.1.134
+    port: 443
+    cipher: aes-256-gcm
+    password: pass33
+
+  - name: HYSTERIA-CA-Toronto-35
+    type: hysteria
+    server: 188.166.146.78
+    port: 8080
+
+  - name: TROJAN-DE-Berlin-38
+    type: trojan
+    server: 188.166.50.184
+    port: 80
+
+  - name: TROJAN-JP-Osaka-20
+    type: trojan
+    server: 159.65.201.143
+    port: 1080
+
+  - name: HYSTERIA-US-Chicago-13
+    type: hysteria
+    server: 188.166.43.68
+    port: 443
+
+  - name: SS-GB-London-28
+    type: ss
+    server: 188.166.142.38
+    port: 8080
+    cipher: aes-256-gcm
+    password: pass28
+
+  - name: VMESS-US-Chicago-18
+    type: vmess
+    server: 185.162.224.237
+    port: 3128
+
+  - name: TROJAN-DE-Berlin-36
+    type: trojan
+    server: 159.65.55.131
+    port: 80
+
+  - name: SSR-US-Los Angeles-37
+    type: ssr
+    server: 89.163.58.207
+    port: 443
+    password: pass37
+
+  - name: VMESS-CA-Toronto-27
+    type: vmess
+    server: 159.65.114.142
+    port: 80
+
+  - name: HYSTERIA-IN-Mumbai-11
+    type: hysteria
+    server: 188.166.51.40
+    port: 1080
+
+  - name: HYSTERIA-JP-Tokyo-7
+    type: hysteria
+    server: 147.135.227.235
+    port: 443
+
+  - name: VLESS-FR-Paris-52
+    type: vless
+    server: 203.0.112.212
+    port: 8080
+
+  - name: TROJAN-US-Chicago-46
+    type: trojan
+    server: 45.142.67.98
+    port: 8080
+
+  - name: VLESS-BR-São Paulo-8
+    type: vless
+    server: 89.163.57.36
+    port: 3128
+
+  - name: VLESS-FR-Paris-60
+    type: vless
+    server: 172.67.199.134
+    port: 8080
+
+  - name: SSR-IN-Mumbai-73
+    type: ssr
+    server: 198.41.124.89
+    port: 8443
+    password: pass73
+
+  - name: SSR-GB-London-16
+    type: ssr
+    server: 188.166.148.122
+    port: 3128
+    password: pass16
+
+  - name: VLESS-IN-Mumbai-77
+    type: vless
+    server: 198.41.18.61
+    port: 8443
+
+  - name: TROJAN-AU-Sydney-41
+    type: trojan
+    server: 89.163.193.64
+    port: 8443
+
+  - name: VLESS-US-Chicago-75
+    type: vless
+    server: 103.21.223.26
+    port: 80
+
+  - name: SSR-GB-London-63
+    type: ssr
+    server: 172.67.233.69
+    port: 8080
+    password: pass63
+
+  - name: TROJAN-KR-Seoul-44
+    type: trojan
+    server: 188.166.192.189
+    port: 8443
+
+  - name: HYSTERIA-CA-Toronto-17
+    type: hysteria
+    server: 45.142.16.104
+    port: 443
+
+  - name: SSR-IN-Mumbai-31
+    type: ssr
+    server: 45.142.169.50
+    port: 8080
+    password: pass31
+
+  - name: TROJAN-US-Los Angeles-76
+    type: trojan
+    server: 103.21.160.178
+    port: 8443
+
+  - name: SSR-GB-London-24
+    type: ssr
+    server: 89.163.34.239
+    port: 8443
+    password: pass24
+
+  - name: VMESS-JP-Tokyo-69
+    type: vmess
+    server: 172.67.238.74
+    port: 80
+
+  - name: TROJAN-AU-Sydney-3
+    type: trojan
+    server: 45.142.250.237
+    port: 3128
+
+  - name: VMESS-AU-Sydney-14
+    type: vmess
+    server: 159.65.167.96
+    port: 8080
+
+  - name: VLESS-CA-Toronto-25
+    type: vless
+    server: 159.65.27.241
+    port: 3128
+
+  - name: TROJAN-KR-Seoul-68
+    type: trojan
+    server: 13.224.253.1
+    port: 8080
+
+  - name: TROJAN-AU-Sydney-56
+    type: trojan
+    server: 103.21.65.60
+    port: 443
+
+  - name: VMESS-FR-Paris-83
+    type: vmess
+    server: 13.224.185.197
+    port: 3128
+
+  - name: VLESS-DE-Berlin-66
+    type: vless
+    server: 203.0.235.72
+    port: 8080
+
+  - name: SSR-SG-Singapore-5
+    type: ssr
+    server: 89.163.180.240
+    port: 3128
+    password: pass5
+
+  - name: VLESS-JP-Tokyo-1
+    type: vless
+    server: 45.142.144.51
+    port: 8443
+
+  - name: SSR-AU-Sydney-84
+    type: ssr
+    server: 103.21.84.192
+    port: 1080
+    password: pass84
+
+  - name: VMESS-CN-Hong Kong-6
+    type: vmess
+    server: 159.65.143.57
+    port: 8080
+
+  - name: SS-CN-Hong Kong-22
+    type: ss
+    server: 185.162.149.153
+    port: 8080
+    cipher: aes-256-gcm
+    password: pass22
+
+  - name: HYSTERIA-GB-London-71
+    type: hysteria
+    server: 203.0.214.124
+    port: 443
+
+  - name: TROJAN-KR-Seoul-39
+    type: trojan
+    server: 185.162.206.246
+    port: 1080
+
+  - name: VMESS-FR-Paris-34
+    type: vmess
+    server: 104.248.32.185
+    port: 3128
+
+  - name: SS-US-New York-32
+    type: ss
+    server: 185.162.149.247
+    port: 8443
+    cipher: aes-256-gcm
+    password: pass32
+
+  - name: SS-IN-Mumbai-72
+    type: ss
+    server: 13.224.203.219
+    port: 8080
+    cipher: aes-256-gcm
+    password: pass72
+
+  - name: SSR-KR-Seoul-61
+    type: ssr
+    server: 172.67.68.170
+    port: 1080
+    password: pass61
+
+  - name: SS-CA-Toronto-0
+    type: ss
+    server: 159.65.71.63
+    port: 80
+    cipher: aes-256-gcm
+    password: pass0
+
+  - name: SS-JP-Osaka-62
+    type: ss
+    server: 103.21.181.73
+    port: 1080
+    cipher: aes-256-gcm
+    password: pass62
+
+  - name: TROJAN-JP-Tokyo-55
+    type: trojan
+    server: 172.67.79.170
+    port: 1080
+
+  - name: VMESS-DE-Berlin-81
+    type: vmess
+    server: 203.0.219.124
+    port: 8080
+
+  - name: TROJAN-FR-Paris-74
+    type: trojan
+    server: 13.224.199.106
+    port: 3128
+
+proxy-groups:
+  - name: PROXY
+    type: select
+    proxies:
+      - VMESS-JP-Tokyo-23
+      - SS-US-New York-12
+      - SSR-US-New York-43
+      - VLESS-KR-Seoul-29
+      - SS-DE-Berlin-47
+      - SS-JP-Osaka-33
+      - HYSTERIA-CA-Toronto-35
+      - TROJAN-DE-Berlin-38
+      - TROJAN-JP-Osaka-20
+      - HYSTERIA-US-Chicago-13
+      - SS-GB-London-28
+      - VMESS-US-Chicago-18
+      - TROJAN-DE-Berlin-36
+      - SSR-US-Los Angeles-37
+      - VMESS-CA-Toronto-27
+      - HYSTERIA-IN-Mumbai-11
+      - HYSTERIA-JP-Tokyo-7
+      - VLESS-FR-Paris-52
+      - TROJAN-US-Chicago-46
+      - VLESS-BR-São Paulo-8
+      - VLESS-FR-Paris-60
+      - SSR-IN-Mumbai-73
+      - SSR-GB-London-16
+      - VLESS-IN-Mumbai-77
+      - TROJAN-AU-Sydney-41
+      - VLESS-US-Chicago-75
+      - SSR-GB-London-63
+      - TROJAN-KR-Seoul-44
+      - HYSTERIA-CA-Toronto-17
+      - SSR-IN-Mumbai-31
+      - TROJAN-US-Los Angeles-76
+      - SSR-GB-London-24
+      - VMESS-JP-Tokyo-69
+      - TROJAN-AU-Sydney-3
+      - VMESS-AU-Sydney-14
+      - VLESS-CA-Toronto-25
+      - TROJAN-KR-Seoul-68
+      - TROJAN-AU-Sydney-56
+      - VMESS-FR-Paris-83
+      - VLESS-DE-Berlin-66
+      - SSR-SG-Singapore-5
+      - VLESS-JP-Tokyo-1
+      - SSR-AU-Sydney-84
+      - VMESS-CN-Hong Kong-6
+      - SS-CN-Hong Kong-22
+      - HYSTERIA-GB-London-71
+      - TROJAN-KR-Seoul-39
+      - VMESS-FR-Paris-34
+      - SS-US-New York-32
+      - SS-IN-Mumbai-72
+      - SSR-KR-Seoul-61
+      - SS-CA-Toronto-0
+      - SS-JP-Osaka-62
+      - TROJAN-JP-Tokyo-55
+      - VMESS-DE-Berlin-81
+      - TROJAN-FR-Paris-74
