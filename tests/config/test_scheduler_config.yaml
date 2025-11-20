@@ -1,0 +1,14 @@
+# Test Configuration for Scheduler
+# Defines scheduled tasks for the test
+
+enabled: true
+
+tasks:
+  - name: "test_crawl_and_verify"
+    cron: "0 0 * * *"
+    enabled: true
+    script: "test_runner.py"
+    params:
+      timeout: 300
+      retry_count: 2
+      verbose: true

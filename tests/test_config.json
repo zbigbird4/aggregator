@@ -1,0 +1,47 @@
+{
+  "domains": [
+    {
+      "name": "local_test_proxies",
+      "domain": "test.local",
+      "sub": ["file:///home/engine/project/tests/data/test_proxies_100.json"],
+      "push_to": ["local_test"]
+    }
+  ],
+  "crawl": {
+    "enable": true,
+    "threshold": 1,
+    "timeout": 10,
+    "exclude": "",
+    "config": {},
+    "persist": {
+      "subscription": "subscriptions"
+    }
+  },
+  "storage": {
+    "type": "local",
+    "path": "/home/engine/project/tests/output",
+    "items": {
+      "subscriptions": {
+        "type": "local",
+        "path": "/home/engine/project/tests/output/subscriptions.json"
+      },
+      "local_test": {
+        "type": "local",
+        "path": "/home/engine/project/tests/output"
+      }
+    }
+  },
+  "groups": {
+    "test_group": {
+      "description": "Test group with all nodes",
+      "targets": {
+        "clash": "local_test",
+        "v2ray": "local_test"
+      }
+    }
+  },
+  "update": {
+    "check_interval": 3600
+  },
+  "delay": 5000
+}

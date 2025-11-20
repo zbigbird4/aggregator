@@ -1,0 +1,21 @@
+# Test Configuration for Ranker - Ranking Strategy
+# Sorts proxies based on latency and location
+
+enabled: true
+
+# Ranking algorithm
+algorithm: "latency"
+
+# Sort criteria
+sort_by:
+  - "latency"
+  - "location"
+  - "uptime"
+
+# Whether to prioritize residential proxies
+residential_priority: false
+
+# Patterns to exclude from ranking
+exclude_patterns:
+  - "^test-down.*"
+  - ".*-(expired|disabled)$"
