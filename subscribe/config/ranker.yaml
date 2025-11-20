@@ -1,0 +1,19 @@
+# Ranker Configuration
+# Settings for proxy ranking and sorting
+
+enabled: true
+
+# Ranking algorithm: latency, location, or mixed
+algorithm: "latency"
+
+# Fields to sort by (in priority order)
+sort_by:
+  - "latency"
+  - "location"
+
+# Prioritize residential proxies
+residential_priority: false
+
+# Patterns to exclude from ranking
+exclude_patterns:
+  - "^backup-.*"

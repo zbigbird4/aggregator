@@ -1,0 +1,30 @@
+# Scheduler Configuration
+# Defines scheduled tasks to be executed at specified intervals
+
+enabled: true
+
+tasks:
+  # Task 1: Process crawled subscriptions
+  - name: "process_subscriptions"
+    cron: "05 03 * * *"  # 03:05 UTC daily
+    enabled: true
+    script: "subscribe.process:main"
+    params:
+      overwrite: true
+      verbose: false
+
+  # Task 2: Refresh push storage
+  - name: "refresh_storage"
+    cron: "05 11 * * *"  # 11:05 UTC daily
+    enabled: true
+    script: "subscribe.process:refresh"
+    params:
+      storage: "all"
+
+  # Task 3: Collect gist subscriptions
+  - name: "collect_gist"
+    cron: "0 */12 * * *"  # Every 12 hours
+    enabled: false
+    script: "subscribe.collect:main"
+    params:
+      config_url: ""
