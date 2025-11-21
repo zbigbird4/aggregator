@@ -1,0 +1,201 @@
+# Docker Compose 覆盖配置 - 可选
+# 
+# 说明：此文件用于覆盖默认的docker-compose.yml配置
+# 适用于特定的部署场景（开发、测试、生产等）
+#
+# 使用方法：
+#   1. 复制此文件为 docker-compose.override.yml
+#   2. Docker Compose会自动使用此覆盖配置
+#   3. 不要提交 docker-compose.override.yml 到版本控制
+#
+# 示例场景见下方注释
+
+# ============================================================
+# 场景1: 开发环境 - 实时代码更新
+# ============================================================
+# version: '3.8'
+# services:
+#   aggregator:
+#     # 挂载源代码以支持实时修改
+#     volumes:
+#       - ./subscribe:/aggregator/subscribe
+#     # 使用更详细的日志
+#     environment:
+#       AGGREGATOR_LOG_LEVEL: "DEBUG"
+#       AGGREGATOR_DEBUG: "true"
+#     # 前台运行便于调试
+#     stdin_open: true
+#     tty: true
+
+# ============================================================
+# 场景2: 本地测试 - 禁用Redis节省资源
+# ============================================================
+# version: '3.8'
+# services:
+#   aggregator:
+#     environment:
+#       STORAGE_TYPE: "file"
+#       CONCURRENT_LIMIT: "5"
+#   redis:
+#     # 完全禁用Redis
+#     image: busybox
+#     command: echo "Redis disabled for local testing"
+
+# ============================================================
+# 场景3: 生产环境 - 资源限制和重启策略
+# ============================================================
+version: '3.8'
+
+services:
+  aggregator:
+    # 增强的重启策略
+    restart: always
+    restart_policy:
+      condition: on-failure
+      delay: 5s
+      max_attempts: 3
+      window: 120s
+    
+    # 生产级别的资源限制
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+    
+    # 更详细的logging配置
+    logging:
+      driver: json-file
+      options:
+        max-size: "100m"
+        max-file: "10"
+        labels: "aggregator-prod"
+    
+    # 生产环境只读输入
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /run
+  
+  redis:
+    # 生产级别的Redis配置
+    restart: always
+    restart_policy:
+      condition: on-failure
+      delay: 5s
+      max_attempts: 3
+      window: 120s
+    
+    # 资源限制
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    
+    # 生产级日志
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+# ============================================================
+# 场景4: 高可用部署 - 多实例
+# ============================================================
+# version: '3.8'
+# services:
+#   aggregator-1:
+#     image: wzdnzd/aggregator:latest
+#     environment:
+#       INSTANCE_ID: "1"
+#       CRON_SCHEDULE: "0 0 * * *"     # 午夜运行
+#       CONCURRENT_LIMIT: "20"
+#   
+#   aggregator-2:
+#     image: wzdnzd/aggregator:latest
+#     environment:
+#       INSTANCE_ID: "2"
+#       CRON_SCHEDULE: "0 6 * * *"     # 6点运行
+#       CONCURRENT_LIMIT: "20"
+#   
+#   aggregator-3:
+#     image: wzdnzd/aggregator:latest
+#     environment:
+#       INSTANCE_ID: "3"
+#       CRON_SCHEDULE: "0 12 * * *"    # 中午运行
+#       CONCURRENT_LIMIT: "20"
+#   
+#   redis:
+#     # 共享Redis用于去重和状态共享
+#     image: redis:7-alpine
+#     volumes:
+#       - redis-data-prod:/data
+#     command: redis-server --appendonly yes
+
+# ============================================================
+# 场景5: 监控栈 - 集成Prometheus和Grafana
+# ============================================================
+# version: '3.8'
+# services:
+#   prometheus:
+#     image: prom/prometheus:latest
+#     volumes:
+#       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+#       - prometheus-data:/prometheus
+#     ports:
+#       - "9090:9090"
+#     command:
+#       - '--config.file=/etc/prometheus/prometheus.yml'
+#   
+#   grafana:
+#     image: grafana/grafana:latest
+#     environment:
+#       GF_SECURITY_ADMIN_PASSWORD: "admin"
+#     ports:
+#       - "3000:3000"
+#     volumes:
+#       - grafana-data:/var/lib/grafana
+#     depends_on:
+#       - prometheus
+#
+# volumes:
+#   prometheus-data:
+#   grafana-data:
+
+# ============================================================
+# 场景6: 反向代理 - 使用Nginx
+# ============================================================
+# version: '3.8'
+# services:
+#   nginx:
+#     image: nginx:alpine
+#     ports:
+#       - "80:80"
+#       - "443:443"
+#     volumes:
+#       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+#       - ./certs:/etc/nginx/certs:ro
+#     depends_on:
+#       - aggregator
+#
+#   aggregator:
+#     # 只暴露给nginx
+#     expose:
+#       - "8080"
+#     environment:
+#       # 无需直接暴露端口
+#       SERVICE_HOST: "aggregator"
+
+# ============================================================
+# 额外的卷定义（如需要多实例配置）
+# ============================================================
+# volumes:
+#   redis-data-prod:
+#     driver: local

@@ -1,4 +1,77 @@
-*.log
-*.pyc
+# 版本控制
 .git
-__pycache__
+.gitignore
+.gitattributes
+
+# 日志文件
+*.log
+logs/
+*.log.*
+
+# Python缓存
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pyc
+.pyo
+*.egg-info/
+dist/
+build/
+
+# IDE和编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# 环境文件
+.env
+.env.local
+.env.*.local
+venv/
+env/
+ENV/
+
+# Docker compose缓存
+docker-compose.override.yml
+
+# 测试覆盖率
+.coverage
+htmlcov/
+.pytest_cache/
+
+# 文档构建
+docs/_build/
+
+# 本地开发文件
+*.local
+local_settings.py
+
+# 暂存的数据
+data.backup/
+*.tmp
+*.temp
+
+# 文档和示例
+README.md
+README_CN.md
+README_EN.md
+DEPLOYMENT.md
+README.docker
+CONFIG_MANAGER_SETUP.md
+FUNCTIONAL_TEST_START_HERE.md
+TESTING_SETUP.md
+
+# 测试目录（使用预构建镜像时不需要）
+tests/
+
+# 工具和脚本目录（可选）
+tools/
+
+# 许可证和元数据
+LICENSE
+.github/

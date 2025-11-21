@@ -1,0 +1,168 @@
+version: '3.8'
+
+# Aggregator Docker Compose 配置
+# 用于快速部署和运行Aggregator代理池聚合工具
+
+services:
+  # 主Aggregator服务
+  aggregator:
+    # 使用本地构建的镜像，或指定预构建镜像
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # 可选：指定pip索引URL (中国推荐使用清华镜像以加速)
+        PIP_INDEX_URL: "https://pypi.org/simple"
+    
+    # 镜像名称和标签
+    image: wzdnzd/aggregator:latest
+    
+    # 容器名称
+    container_name: aggregator
+    
+    # 重启策略
+    restart: unless-stopped
+    
+    # 环境变量配置
+    env_file:
+      - .env
+    
+    environment:
+      # Python环境变量
+      PYTHONUNBUFFERED: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+      
+      # 日志级别（DEBUG, INFO, WARNING, ERROR）
+      AGGREGATOR_LOG_LEVEL: "INFO"
+      AGGREGATOR_DEBUG: "false"
+      
+      # GitHub Gist配置
+      GIST_PAT: "${GIST_PAT}"
+      GIST_LINK: "${GIST_LINK}"
+      CUSTOMIZE_LINK: "${CUSTOMIZE_LINK}"
+      
+      # 代理测试配置
+      CONCURRENT_LIMIT: "${CONCURRENT_LIMIT:-10}"
+      TEST_COUNT: "${TEST_COUNT:-1}"
+      RETRY_TIMES: "${RETRY_TIMES:-2}"
+      MAX_LATENCY: "${MAX_LATENCY:-5000}"
+      PING_TIMEOUT: "${PING_TIMEOUT:-3}"
+      HTTP_TIMEOUT: "${HTTP_TIMEOUT:-10}"
+      
+      # 存储配置
+      STORAGE_TYPE: "${STORAGE_TYPE:-file}"
+      REDIS_URL: "${REDIS_URL:-}"
+      UPSTASH_REDIS_URL: "${UPSTASH_REDIS_URL:-}"
+      
+      # 计划任务配置
+      CRON_SCHEDULE: "${CRON_SCHEDULE:-0 */6 * * *}"
+      AUTO_RUN_ON_START: "${AUTO_RUN_ON_START:-true}"
+      
+      # 输出配置
+      OUTPUT_PATH: "/aggregator/output"
+      CLASH_CONFIG_PATH: "/aggregator/output/clash.yaml"
+      ENABLE_CLASH_GENERATION: "${ENABLE_CLASH_GENERATION:-true}"
+      
+      # 通知配置
+      NOTIFICATION_ENABLED: "${NOTIFICATION_ENABLED:-false}"
+      NOTIFICATION_WEBHOOKS: "${NOTIFICATION_WEBHOOKS:-}"
+    
+    # 暴露端口（可选，如果应用提供Web服务）
+    ports:
+      # HTTP服务端口（如果配置了Web API）
+      - "8080:8080"
+    
+    # 数据卷挂载
+    volumes:
+      # 配置文件目录（持久化）
+      - ./config:/aggregator/subscribe/config
+      # 输出目录（持久化生成的文件）
+      - ./output:/aggregator/output
+      # 数据目录（缓存和临时数据）
+      - ./data:/aggregator/data
+      # 日志目录（持久化日志）
+      - ./logs:/aggregator/logs
+    
+    # 日志配置
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "aggregator"
+    
+    # 资源限制
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '1'
+          memory: 512M
+    
+    # 依赖关系
+    depends_on:
+      - redis
+
+  # 可选：Redis缓存和存储服务
+  redis:
+    # 仅在需要Redis时启用，将该服务的enabled改为true
+    # 或通过 docker-compose -f docker-compose.yml --profile redis up -d 启动
+    image: redis:7-alpine
+    
+    # 容器名称
+    container_name: aggregator-redis
+    
+    # 重启策略
+    restart: unless-stopped
+    
+    # 暴露端口
+    ports:
+      # Redis端口
+      - "6379:6379"
+    
+    # 数据卷挂载
+    volumes:
+      # Redis持久化数据
+      - redis-data:/data
+      # Redis配置文件（可选）
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+    
+    # 启动命令
+    command: redis-server /usr/local/etc/redis/redis.conf --appendonly yes
+    
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+    # 日志配置
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # 资源限制
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
+# 数据卷定义
+volumes:
+  redis-data:
+    driver: local
+
+# 网络定义
+networks:
+  default:
+    name: aggregator-network
+    driver: bridge
