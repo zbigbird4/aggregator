@@ -1,0 +1,286 @@
+# Aggregator Docker 快速参考
+
+## 快速开始 (5分钟)
+
+```bash
+# 1. 克隆项目
+git clone https://github.com/wzdnzd/aggregator.git
+cd aggregator
+
+# 2. 配置环境变量
+cp .env.example .env
+# 编辑 .env，填入你的GitHub Token和Gist ID
+
+# 3. 启动服务
+docker-compose up -d
+
+# 4. 查看日志
+docker-compose logs -f aggregator
+
+# 5. 查看结果
+ls output/
+cat output/clash.yaml
+```
+
+---
+
+## 常用命令速查表
+
+### 容器管理
+
+| 命令 | 说明 |
+|------|------|
+| `docker-compose build` | 构建镜像（首次或更新代码后） |
+| `docker-compose up -d` | 后台启动容器 |
+| `docker-compose down` | 停止并删除容器 |
+| `docker-compose restart` | 重启容器 |
+| `docker-compose stop` | 停止容器 |
+| `docker-compose ps` | 查看容器状态 |
+
+### 日志查看
+
+| 命令 | 说明 |
+|------|------|
+| `docker-compose logs aggregator` | 查看所有日志 |
+| `docker-compose logs -f aggregator` | 实时查看日志 |
+| `docker-compose logs -n 100 aggregator` | 查看最后100行 |
+| `docker-compose logs aggregator \| grep ERROR` | 只看错误 |
+
+### 数据访问
+
+| 命令 | 说明 |
+|------|------|
+| `docker-compose exec aggregator bash` | 进入容器 |
+| `docker cp aggregator:/aggregator/output/clash.yaml ./` | 复制文件 |
+| `docker-compose exec aggregator ls -la output/` | 查看容器内文件 |
+
+### 调试命令
+
+| 命令 | 说明 |
+|------|------|
+| `docker stats aggregator` | 实时资源使用 |
+| `docker-compose exec aggregator python -c "import sys; print(sys.version)"` | 检查Python版本 |
+| `docker-compose exec aggregator pip list` | 查看已安装包 |
+| `docker-compose exec aggregator env \| grep AGGREGATOR` | 查看环境变量 |
+
+---
+
+## 环境变量速查
+
+### 最小必需配置
+
+```env
+# 不配置则本地文件存储，无法上传到Gist
+# GIST_PAT=your_github_token
+# GIST_LINK=username/gist-id
+```
+
+### 常用配置
+
+```env
+# 日志级别
+AGGREGATOR_LOG_LEVEL=INFO          # DEBUG, INFO, WARNING, ERROR
+
+# 代理测试参数
+CONCURRENT_LIMIT=10                # 并发数 (根据服务器调整)
+MAX_LATENCY=5000                   # 最大延迟(ms)
+
+# 计划任务
+CRON_SCHEDULE=0 */6 * * *          # Cron表达式
+AUTO_RUN_ON_START=true             # 启动时运行
+
+# 存储类型
+STORAGE_TYPE=file                  # file, redis, upstash
+```
+
+### 完整配置
+
+详见 `.env.example` 文件（包含所有支持的环境变量及说明）
+
+---
+
+## 与标准部署的对比
+
+| 功能 | Docker | 标准部署 |
+|------|--------|---------|
+| 安装难度 | ⭐ 极简 | ⭐⭐⭐ 复杂 |
+| 环境隔离 | ✅ 完全隔离 | ❌ 依赖系统 |
+| 启动速度 | ⭐⭐⭐ 快速 | ⭐ 较慢 |
+| 配置管理 | ✅ 统一 .env | ❌ 多文件 |
+| 更新升级 | ✅ 一行命令 | ❌ 手动处理 |
+| 多实例 | ✅ 轻松部署 | ❌ 复杂配置 |
+| 数据持久化 | ✅ Volumes | ❌ 文件系统 |
+| 跨平台 | ✅ Linux/Mac/Win | ⚠️ 依赖系统 |
+
+---
+
+## 常见问题
+
+### 容器无法启动
+```bash
+# 查看错误
+docker-compose logs aggregator
+
+# 重建镜像
+docker-compose build --no-cache
+
+# 清理所有数据重新开始
+docker-compose down -v
+```
+
+### 代理测试失败
+```bash
+# 检查网络
+docker-compose exec aggregator ping 8.8.8.8
+
+# 增加超时时间
+# 编辑 .env
+MAX_LATENCY=10000
+HTTP_TIMEOUT=15
+
+# 降低并发
+CONCURRENT_LIMIT=5
+```
+
+### 磁盘空间不足
+```bash
+# 检查磁盘使用
+du -sh ./output ./data ./logs
+
+# 清理旧数据
+docker-compose exec aggregator find /aggregator/data -mtime +7 -delete
+
+# 清理Docker
+docker system prune -a
+```
+
+### Gist上传失败
+```bash
+# 验证token
+echo $GIST_PAT
+
+# 检查Gist ID
+curl https://api.github.com/gists/your-gist-id
+
+# 重新生成token: https://github.com/settings/tokens
+```
+
+---
+
+## 文件结构
+
+```
+project/
+├── Dockerfile              # Docker镜像定义
+├── docker-compose.yml      # 服务编排配置
+├── .env.example           # 环境变量模板
+├── .env                   # 实际配置（不提交）
+├── DEPLOYMENT.md          # 详细部署文档
+├── README.docker          # 本文件
+├── requirements.txt       # Python依赖
+├── subscribe/             # 主程序
+├── output/               # 输出目录
+├── data/                 # 缓存数据
+└── logs/                 # 日志目录
+```
+
+---
+
+## 性能调优
+
+### 低端机器 (1核2GB)
+```env
+CONCURRENT_LIMIT=5
+TEST_COUNT=1
+MAX_LATENCY=8000
+```
+
+### 中端机器 (2核4GB)
+```env
+CONCURRENT_LIMIT=10
+TEST_COUNT=2
+MAX_LATENCY=5000
+```
+
+### 高端机器 (4核8GB)
+```env
+CONCURRENT_LIMIT=30
+TEST_COUNT=2
+MAX_LATENCY=3000
+STORAGE_TYPE=redis
+```
+
+---
+
+## 更新镜像
+
+```bash
+# 方法1: 从Dockerfile构建
+docker-compose build --no-cache
+
+# 方法2: 拉取预构建镜像
+docker pull wzdnzd/aggregator:latest
+docker-compose pull
+
+# 查看镜像
+docker images | grep aggregator
+
+# 清理旧镜像
+docker image prune
+```
+
+---
+
+## 获取帮助
+
+- 📚 详细文档: [DEPLOYMENT.md](./DEPLOYMENT.md)
+- 📖 项目文档: [README.md](./README.md)
+- 🐛 报告问题: https://github.com/wzdnzd/aggregator/issues
+- 💬 讨论: https://github.com/wzdnzd/aggregator/discussions
+
+---
+
+## 完整工作流示例
+
+### 基础场景
+```bash
+# 初次设置
+git clone https://github.com/wzdnzd/aggregator.git && cd aggregator
+cp .env.example .env
+# 编辑 .env
+docker-compose build
+docker-compose up -d
+docker-compose logs -f
+
+# 日常使用
+docker-compose ps           # 检查状态
+docker-compose logs         # 查看日志
+ls output/                 # 查看输出
+
+# 升级版本
+git pull
+docker-compose build --no-cache
+docker-compose restart
+```
+
+### 高级场景
+```bash
+# 启用Redis缓存
+# 编辑 .env
+STORAGE_TYPE=redis
+
+# 修改docker-compose.yml以启用Redis服务
+# 启动
+docker-compose up -d
+
+# 监控
+docker stats
+docker-compose exec redis redis-cli info memory
+
+# 备份
+tar -czf backup-$(date +%Y%m%d).tar.gz output/ data/
+```
+
+---
+
+最后修改: 2024年
