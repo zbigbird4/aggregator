@@ -134,3 +134,17 @@ config.yaml
 generate.ini
 subscribe/config/config.json
 config.local.json
+
+# Docker
+data/
+logs/
+backups/
+*.tar.gz
+debug-info/
+docker-compose.override.yml
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
