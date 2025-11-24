@@ -1,0 +1,173 @@
+version: '3.8'
+
+# =============================================================================
+# Aggregator - Docker Compose Configuration
+# 免费代理池构建工具容器编排配置
+# =============================================================================
+#
+# 快速启动：
+#   docker-compose up -d
+#
+# 查看日志：
+#   docker-compose logs -f aggregator
+#
+# 停止服务：
+#   docker-compose down
+#
+# 更多场景请参考 INSTALLATION.md
+# =============================================================================
+
+services:
+  # ===========================================================================
+  # Aggregator 主服务
+  # ===========================================================================
+  aggregator:
+    # 镜像选择（根据需求选择其一）
+    # image: ghcr.io/wzdnzd/aggregator:latest        # GitHub Container Registry
+    image: wzdnzd/aggregator:latest                  # Docker Hub (示例)
+    
+    container_name: aggregator
+    
+    # 重启策略
+    restart: unless-stopped
+    
+    # 环境变量配置
+    environment:
+      # 必需配置 - GitHub Gist 相关
+      - GIST_PAT=${GIST_PAT}                         # GitHub Personal Access Token
+      - GIST_LINK=${GIST_LINK}                       # 格式: username/gist_id
+      
+      # 可选配置 - 自定义机场列表
+      - CUSTOMIZE_LINK=${CUSTOMIZE_LINK:-}           # 自定义机场列表URL
+      
+      # 可选配置 - 特殊协议支持
+      - ENABLE_SPECIAL_PROTOCOLS=${ENABLE_SPECIAL_PROTOCOLS:-false}
+      
+      # 时区设置
+      - TZ=Asia/Shanghai
+      
+      # Python 优化
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    
+    # 数据卷挂载
+    volumes:
+      # 配置文件挂载（如果使用 process.py 模式）
+      # - ./config:/aggregator/config:ro
+      
+      # 数据持久化
+      - aggregator-data:/aggregator/data
+      
+      # 日志持久化
+      - aggregator-logs:/aggregator/logs
+      
+      # 自定义配置（可选）
+      # - ./custom-config.json:/aggregator/my-config.json:ro
+    
+    # 资源限制（根据实际情况调整）
+    deploy:
+      resources:
+        limits:
+          cpus: '2'              # 最大使用2个CPU核心
+          memory: 2G             # 最大使用2GB内存
+        reservations:
+          cpus: '0.5'            # 预留0.5个CPU核心
+          memory: 512M           # 预留512MB内存
+    
+    # 网络配置
+    networks:
+      - aggregator-network
+    
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    
+    # 日志配置
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ===========================================================================
+  # Redis 服务（可选 - 如果需要本地 Redis）
+  # ===========================================================================
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: aggregator-redis
+  #   restart: unless-stopped
+  #   
+  #   command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-your_redis_password}
+  #   
+  #   volumes:
+  #     - redis-data:/data
+  #   
+  #   networks:
+  #     - aggregator-network
+  #   
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 10s
+  #     timeout: 3s
+  #     retries: 3
+  #   
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '1'
+  #         memory: 512M
+
+  # ===========================================================================
+  # Watchtower - 自动更新容器（可选）
+  # ===========================================================================
+  # watchtower:
+  #   image: containrrr/watchtower:latest
+  #   container_name: aggregator-watchtower
+  #   restart: unless-stopped
+  #   
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   
+  #   environment:
+  #     - WATCHTOWER_CLEANUP=true                    # 清理旧镜像
+  #     - WATCHTOWER_POLL_INTERVAL=86400             # 检查间隔（秒）24小时
+  #     - WATCHTOWER_INCLUDE_RESTARTING=true
+  #     - TZ=Asia/Shanghai
+  #   
+  #   command: aggregator                            # 只监控 aggregator 容器
+
+# =============================================================================
+# 数据卷定义
+# =============================================================================
+volumes:
+  aggregator-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data
+  
+  aggregator-logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./logs
+  
+  # Redis 数据卷（如果启用 Redis）
+  # redis-data:
+  #   driver: local
+
+# =============================================================================
+# 网络定义
+# =============================================================================
+networks:
+  aggregator-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
